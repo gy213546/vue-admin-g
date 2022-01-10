@@ -3,7 +3,7 @@
 </script>
 
 <template>
-	<div class="w-full"></div>
+	<router-view />
 </template>
 
 <style>
@@ -13,5 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  min-height: 100%;
 }
 </style>
