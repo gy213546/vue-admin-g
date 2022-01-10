@@ -16,8 +16,21 @@ export default defineConfig({
 			'@': resolve('src')
 		}
 	},
+	server: {
+	  port: 3001,
+	  host: '0.0.0.0',
+	  open: false,
+	  proxy: { // 代理配置
+		'/dev': {
+			target: 'http://10.10.50.139:9999',
+			changeOrigin: true,
+			rewrite: path => path.replace(/^\/dev/, '')
+		}
+	  },
+	},
 	plugins: [
 		vue(),
 		WindiCSS()
-	]
+	],
+	
 })
