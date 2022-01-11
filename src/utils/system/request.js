@@ -1,61 +1,70 @@
-import axios , { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios'
+import axios, {
+	AxiosError,
+	AxiosRequestConfig,
+	AxiosResponse,
+	AxiosInstance
+} from 'axios'
 import store from '@/store'
-import { ElMessage } from 'element-plus'
-const baseURL = import.meta.env.VITE_BASE_URL
+import errorCode from '@/entryConfig/errorCode'
+import {
+	ElMessage
+} from 'element-plus'
+import qs from 'qs'
+const baseURL =
+	import.meta.env.VITE_BASE_URL
 
-const service = axios.create({
-  baseURL: baseURL,
-  timeout: 5000
+const request = axios.create({
+	baseURL: baseURL,
+	timeout: 5000
 })
-
 // 请求前的统一处理
-service.interceptors.request.use(
-  (config) => {
-    // JWT鉴权处理
-    if (store.getters['user/token']) {
-      config.headers['token'] = store.state.user.token
-    }
-    return config
-  },
-  (error) => {
-    console.log(error) // for debug
-    return Promise.reject(error)
-  }
+request.interceptors.request.use(
+	(config) => {
+		// JWT鉴权处理
+		if (store.getters['user/access_token']) {
+			config.headers['Authorization'] = 'Bearer ' + store.state.user.access_token
+		}
+		//租户类型
+		if (store.getters['user/TENANT_ID']) {
+			config.headers['TENANT-ID'] = store.state.user.TENANT_ID
+		}
+		return config
+	},
+	(error) => {
+		console.log(error) // for debug
+		return Promise.reject(error)
+	}
 )
 
-service.interceptors.response.use(
-  (response) => {
-    const res = response.data
-    if (res.code === 200) {
-      return res
-    } else {
-      showError(res)
-      return Promise.reject(res)
-    }
-  },
-  (error)=> {
-    console.log(error) // for debug
-    const badMessage = error.message || error
-    const code = parseInt(badMessage.toString().replace('Error: Request failed with status code ', ''))
-    showError({ code, message: badMessage })
-    return Promise.reject(error)
-  }
+request.interceptors.response.use(
+	(res) => {
+		const status = Number(res.status) || 200
+		const message = res.data.msg || errorCode[status] || errorCode['default']
+		if (status === 401) {
+			showErr(message);
+			return
+		}
+
+		if (status !== 200 || res.data.code === 1) {
+			showErr(message);
+			return Promise.reject(new Error(message))
+		}
+		return res
+	},
+	(error) => {
+		showErr(error);
+		return Promise.reject(new Error(error))
+	}
 )
 
-// 错误处理
-function showError(error) {
-  // token过期，清除本地数据，并跳转至登录页面
-  if (error.code === 403) {
-    // to re-login
-    store.dispatch('user/loginOut')
-  } else {
-    ElMessage({
-      message: error.msg || error.message || '服务异常',
-      type: 'error',
-      duration: 3 * 1000
-    })
-  }
-  
+const showErr = (message)=>{
+	ElMessage({
+		message: message,
+		type: 'error'
+	})
+	store.dispatch('user/FedLogOut')
 }
 
-export default service
+
+
+export default request
