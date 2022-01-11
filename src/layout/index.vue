@@ -1,12 +1,12 @@
 <template>
-	<!-- <div class="w-full h-full"> -->
-
-
-	<!-- </div> -->
 	<el-container class="h-full w-full">
-		<el-header>s</el-header>
+		<el-header>
+			<l-header/>
+		</el-header>
 		<el-container>
-			<el-aside width="200px">Aside</el-aside>
+			<el-aside width="200px">
+				<l-menu/>
+			</el-aside>
 			<el-main>
 				<router-view></router-view>
 			</el-main>
@@ -15,6 +15,16 @@
 </template>
 
 <script>
+import LHeader from './components/header'
+import LMenu from './components/menu'
+import tabs from './components/tabs'
+export default {
+	name:'layout',
+	components:{LHeader,LMenu,tabs},
+	setup() {
+		
+	},
+}
 </script>
 
 <style>

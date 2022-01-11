@@ -11,7 +11,9 @@ export const getAsyncRoutes = (routes) => {
 			const path = route.children[0].path;
 			newRoute.redirect = path.indexOf('/index') != -1 ? path : path.replace('/index', '');
 		} else {
-			newRoute.component = modules[`../../views${route.path}.vue`]
+			const comp = modules[`../../views${route.path}.vue`];
+			newRoute.component = comp;
+			newRoute['meta']['to_404'] = comp ? false : true;
 		}
 		for (const key in route) {
 			if (keys.includes(key)) {

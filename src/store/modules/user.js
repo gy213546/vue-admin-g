@@ -71,12 +71,8 @@ const mutations = {
 		state.permissions = list
 	},
 	SET_ROUTES(state, routes) {
-		state.routes = [].concat(routes);
-		routes.forEach(item=>{
-			router.addRoute(item);
-		})
 		
-		console.log(routes)
+		state.routes = routes;
 	},
 	SET_ADDROUTES(state, addRoutes) {
 		state.addRoutes = addRoutes;
@@ -178,7 +174,12 @@ const actions = {
 				const resData = res.data.data;
 				commit('SET_ADDROUTES', resData)
 				const asyncRoutes = getAsyncRoutes(resData) // 对路由格式进行处理
-				commit('SET_ROUTES', asyncRoutes)
+				// commit('SET_ROUTES', asyncRoutes)
+				const curRoutes = router.options.routes;
+				asyncRoutes.forEach(item=>{
+					curRoutes.push(item);
+					router.addRoute(item);
+				})
 			})
 			resolve()
 		})
