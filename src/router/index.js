@@ -16,25 +16,49 @@ import {
 } from 'element-plus'
 const routes = [{
 		path: "/",
-		redirect: "/home",
+		redirect: "/redirect",
 		hidden:true
 	},
+	{
+        path: '/redirect',
+        component: layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/index',
+            component: () => import('@/views/redirect/index')
+        }]
+    },
 	{
 		path: "/home",
 		name: "home",
 		component: layout,
 		redirect: '/home/index',
 		meta: {
-			title: "智能看板"
+			title: "智能看板",
+			icon: 'icon-kanban',
 		},
 		children: [{
 			path: 'index',
 			component: () => import("@/views/home"),
 			meta: {
-				title: "智能看板"
-			}
+				title: "智能看板",
+			},
 		}]
 	},
+	{
+        path: '/info',
+        component: layout,
+        redirect: '/info/index',
+		hidden: true,
+        children: [{
+            path: 'index',
+            name: '个人信息',
+            component: () => import("@/views/userInfo"),
+            meta: {
+                title: "个人信息"
+            }
+        }]
+    },
 	{
 		path: "/login",
 		name: "login",
@@ -102,9 +126,8 @@ refresh();
 const whiteList = ['/login']
 // 路由拦截
 router.beforeEach(async (to, from, next) => {
-	console.log(to);
 	nprogress.start()
-	
+	changeTitle(to.meta.title || '')
 	if (store.state.user.access_token) {
 		if(to.meta.to_404){
 			router.push('/404')

@@ -1,12 +1,16 @@
 <template>
   <el-menu-item v-if="isOneChild" :index="item.path">
-    {{ item.meta.title }}
-  </el-menu-item>
-  <el-sub-menu v-else :index="item.path" popper-append-to-body>
+     <div class="h-full flex items-center"><i :class="[item.meta.icon]"></i></div>
     <template #title>
       <span>{{ item.meta.title }}</span>
     </template>
-     <menu-item v-for="child in item.children" :key="child.path" :item="child"/>
+  </el-menu-item>
+  <el-sub-menu v-else :index="item.path" popper-append-to-body>
+    <template #title>
+      <i :class="[item.meta.icon]"></i>
+      <span>{{ item.meta.title }}</span>
+    </template>
+    <menu-item v-for="child in item.children" :key="child.path" :item="child"  style="text-indent:10px"/>
   </el-sub-menu>
 </template>
 <script>

@@ -16,7 +16,9 @@ const state ={
   },
   menuList: []
 }
-
+const getters = {
+  isCollapse: state => state.isCollapse,
+}
 // mutations
 const mutations = {
   isCollapseChange(state, type) {
@@ -40,5 +42,6 @@ export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
+  getters
 }

@@ -170,7 +170,6 @@ const actions = {
 	}, roles) {
 		return new Promise(resolve => {
 			getMenu().then(res => {
-				// console.log(res)
 				const resData = res.data.data;
 				commit('SET_ADDROUTES', resData)
 				const asyncRoutes = getAsyncRoutes(resData) // 对路由格式进行处理
@@ -180,8 +179,8 @@ const actions = {
 					curRoutes.push(item);
 					router.addRoute(item);
 				})
+				resolve()
 			})
-			resolve()
 		})
 	}
 }

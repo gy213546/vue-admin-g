@@ -18,4 +18,5 @@ export const persistedstate = (modules)=>{
 export const resetPersistedstate = ()=>{
 	localStorage.removeItem(persistedstate_key)
 	sessionStorage.removeItem(persistedstate_key)
+	location.reload()
 }

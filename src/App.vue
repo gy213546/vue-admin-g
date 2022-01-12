@@ -16,4 +16,14 @@
   width: 100%;
   height: 100vh;
 }
+[class^="icon-"] {
+  font-family: "iconfont";
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 20px;
+  font-size: 20px;
+  line-height: 20px;
+  color: inherit;
+}
 </style>

@@ -20,8 +20,9 @@ const request = axios.create({
 // 请求前的统一处理
 request.interceptors.request.use(
 	(config) => {
+		const isToken = (config.headers || {}).isToken === false
 		// JWT鉴权处理
-		if (store.getters['user/access_token']) {
+		if (store.getters['user/access_token'] && !isToken) {
 			config.headers['Authorization'] = 'Bearer ' + store.state.user.access_token
 		}
 		//租户类型
@@ -62,7 +63,7 @@ const showErr = (message)=>{
 		message: message,
 		type: 'error'
 	})
-	store.dispatch('user/FedLogOut')
+	// store.dispatch('user/FedLogOut')
 }
 
 
